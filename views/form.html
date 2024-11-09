@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <form id="form">
+      <!-- Input data -->
+      <!-- ... -->
+      <button type="submit">Submit</button>
+    </form>
+
+    <div
+      id="resultModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+        <span
+          class="close text-gray-500 text-2xl font-bold cursor-pointer float-right"
+          >&times;</span
+        >
+        <div class="result-title text-2xl font-bold mb-4 text-gray-800">
+          Result
+        </div>
+        <div
+          class="result-message text-lg mb-4 text-gray-600"
+          id="resultMessage"
+        ></div>
+      </div>
+    </div>
+
+    <script>
+      const route = "/submit";
+
+      document
+        .getElementById("form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", route, true);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              // Show result
+              const result = JSON.parse(xhr.responseText);
+              document.getElementById("resultMessage").innerText =
+                result.message;
+              document.getElementById("resultModal").classList.remove("hidden");
+            }
+          };
+          xhr.send(formData);
+        });
+
+      document.querySelector(".close").onclick = function () {
+        document.getElementById("resultModal").classList.add("hidden");
+      };
+
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("resultModal")) {
+          document.getElementById("resultModal").classList.add("hidden");
+        }
+      };
+    </script>
+  </body>
+</html>
